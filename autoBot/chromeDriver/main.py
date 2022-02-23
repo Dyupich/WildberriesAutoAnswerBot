@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import pickle
 
-import openpyxl
 from fake_useragent import UserAgent
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -48,6 +47,7 @@ if __name__ == '__main__':
                 ">>>")
 
         set_last_user(user_number)
+    del menu
     try:
         url = 'https://seller.wildberries.ru/feedback-question/feedbacks/not-answered-feedbacks'
         s = Service('./chromedriver.exe')
@@ -63,18 +63,35 @@ if __name__ == '__main__':
         driver.refresh()
         reviews = []
         while len(reviews) == 0:
-            reviews = driver.find_elements(By.XPATH, r'//ul[@class="feedbackCardsList"]//li')
+            reviews = driver.find_elements(By.XPATH, r'//ul[@class="feedbackCardsList"]'
+                                                     r'//li')
         for i in range(len(reviews)):
-            # Локально найти элемент среди списка reviews не
-            answer = reviews[i].find_element(By.XPATH,
-                                             f'//ul[@class="feedbackCardsList"]//li[{i + 1}]//*[text()="Ответ"]')
-            answer.screenshot("answer.png")
-            answer.click()
+            if len(driver.find_elements(By.XPATH,
+                                        '//ul[@class="feedbackCardsList"]'
+                                        f'//li[{i + 1}]'
+                                        '//*[name()="svg"]'
+                                        '//*[name()="path"][@fill="#E97F31"]')) == 5:
+                if len(driver.find_elements(By.XPATH, '//span[text()="Принимаю"]')) > 0:
+                    driver.find_element(By.XPATH, '//span[text()="Принимаю"]').click()
+                answer = driver.find_element(By.XPATH,
+                                             f'//ul[@class="feedbackCardsList"]'
+                                             f'//li[{i + 1}]'
+                                             f'//*[text()="Ответ"]')
+                answer.click()
+                answer_field = driver.find_element(By.XPATH,
+                                                   f'//ul[@class="feedbackCardsList"]'
+                                                   f'//li[{i + 1}]'
+                                                   f'//div[@class="Text-area-input"]'
+                                                   f'//*')
 
-            answer_field = reviews[i].find_element(By.XPATH,
-                                                   f'//ul[@class="feedbackCardsList"]//li[{i + 1}]//*'
-                                                   f'[@class="formTextAreaLabelContainer"]/../*[2]')
-            answer_field.send_keys(create_template("Шаблон.xlsx"))
+                product_code = driver.find_element(By.XPATH, '//ul[@class="feedbackCardsList"]'
+                                                             f'//li[{i + 1}]'
+                                                             '//*[text()="Артикул поставщика"]'
+                                                             '/../..//*[2]'
+                                                   ).text
+                txt = create_template("Шаблон.xlsx", product_code=product_code)
+                answer_field.send_keys(txt)
+                reviews[i].screenshot(f"screens/shablon{i + 1}.png")
 
         check = input("Введите что-либо для завершения\n>>>")
     except FileNotFoundError as ex:
