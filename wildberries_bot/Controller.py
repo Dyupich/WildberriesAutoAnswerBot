@@ -19,7 +19,8 @@ XPathes = {
     "vendor_code": r'//span[text()="Артикул продавца"]/../../span[contains(@class, "Text")]',
     "answer_and_go_to_inner": r'//span[contains(@class, "Text--inherit") and text()="Ответить"]',
     "text_area": r'//textarea',
-    "answer": r'//span[text()="Ответить" and contains(@class, "Button-link__text")]'
+    "answer": r'//span[text()="Ответить" and contains(@class, "Button-link__text")]',
+    "notification": r'//div[contains(@class, "Notifications-modals-container")]'
 }
 
 
@@ -27,7 +28,7 @@ class Controller:
     def __init__(self):
         s = Service('./chromedriver.exe')
         options = webdriver.ChromeOptions()
-        options.add_argument(f"user-agent={UserAgent().chrome}")
+        options.add_argument(f"user-agent={UserAgent(use_external_data=True).chrome}")
         options.add_argument("--start-maximized")
         self.driver = webdriver.Chrome(service=s, options=options)
 
@@ -101,6 +102,7 @@ class Controller:
                 text_area.send_keys(answer)
                 self.click_on_item_xpath(answer_xpath)
                 print(f"{i + 1:0>3} answered: {answer}")
+
 
         # Last page has no arrow to next page
         if len(self.driver.find_elements(By.XPATH, XPathes["arrow_to_next_page"])) == 0:

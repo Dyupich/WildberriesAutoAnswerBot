@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import pickle
+import time
 
 from main import is_correct_number
 from fake_useragent import UserAgent
@@ -23,7 +24,7 @@ if __name__ == '__main__':
         url = 'https://seller.wildberries.ru'
         s = Service('./chromedriver.exe')
         options = webdriver.ChromeOptions()
-        options.add_argument(f"user-agent={UserAgent().chrome}")
+        options.add_argument(f"user-agent={UserAgent(use_external_data=True).chrome}")
         driver = webdriver.Chrome(service=s, options=options)
         driver.get(url)
 
@@ -44,6 +45,7 @@ if __name__ == '__main__':
             print("Данные о входе не сохранены. Вам необходимо перезапустить приложение для входа.")
     except Exception as ex:
         print(ex)
+        time.sleep(10)
     finally:
         driver.close()
         driver.quit()

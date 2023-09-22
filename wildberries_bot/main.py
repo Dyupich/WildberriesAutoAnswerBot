@@ -71,6 +71,7 @@ if __name__ == '__main__':
         print("Вы указали данные пользователя, чьи данные для входа еще не были сохранены.")
     except Exception as ex:
         print(ex)
+        time.sleep(10)
         raise ex
     finally:
         controller.driver.close()
