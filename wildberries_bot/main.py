@@ -52,89 +52,20 @@ if __name__ == '__main__':
         # open url
         # remove cookies
         controller.driver.delete_all_cookies()
+        print("[INFO] Cookies deleted")
         # add cookies of saved user
         for cookie in pickle.load(open(f"{user_number}_cookies", "rb")):
             # print(cookie)
             controller.driver.add_cookie(cookie)
+        print(f"[INFO] User {user_number} cookies loaded")
         # restarting our page
         controller.driver.refresh()
+        print("[INFO] Page is refreshed")
         # changing reviews list from 5_items to 100_items
         controller.make_100_reviews_at_page()
-
+        print("[INFO] Controller.make_100_reviews_at_page method is done")
         # main loop
         controller.answer_on_reviews()
-        # reviews = []
-        # while len(reviews) == 0:
-        #     reviews = driver.find_elements(By.XPATH, r'//ul[@class="feedbackCardsList"]/li')
-        # answer = []
-        # page = 1
-        # check_accept()
-        # while int(driver.find_element(By.XPATH, r'//li[contains(@class, "pageTabsItem")][1]'
-        #                                         r'/*/span[contains(@class, "tabCount")]'
-        #                                         r'/span').text) > 0:
-        #     while len(reviews) == 0:
-        #         reviews = driver.find_elements(By.XPATH, r'//ul[@class="feedbackCardsList"]'
-        #                                                  r'/li')
-        #     check_accept()
-        #     for i in range(len(reviews)):
-        #         if len(driver.find_elements(By.XPATH, r'//ul[@class="feedbackCardsList"]'
-        #                                               f'/li[{i + 1}]//div[@class="classContentInfo"]'
-        #                                               r'//div[contains(@class, "one")]')) == 5:
-        #
-        #             check_accept()
-        #             if page > 2 and type(answer) != list:
-        #                 while answer == driver.find_element(By.XPATH, f'//ul[@class="feedbackCardsList"]'
-        #                                                               f'//li[{i + 1}]'
-        #                                                               f'//*[text()="Ответ"]'):
-        #                     driver.execute_script('scroll(0, -800)')
-        #                     time.sleep(3)
-        #
-        #             answer = driver.find_element(By.XPATH, f'//ul[@class="feedbackCardsList"]'
-        #                                                    f'//li[{i + 1}]'
-        #                                                    f'//*[text()="Ответ"]')
-        #             answer.click()
-        #
-        #             answer_field = driver.find_element(By.XPATH, f'//ul[@class="feedbackCardsList"]'
-        #                                                          f'//li[{i + 1}]'
-        #                                                          f'//div[@class="Text-area-input"]'
-        #                                                          f'//*')
-        #
-        #             product_code = driver.find_element(By.XPATH, '//ul[@class="feedbackCardsList"]'
-        #                                                          f'//li[{i + 1}]'
-        #                                                          '//*[text()="Артикул поставщика"]'
-        #                                                          '/../..//*[2]'
-        #                                                ).text
-        #
-        #             txt = create_template("Шаблон.xlsx", product_code=product_code)
-        #             if txt[:6] == "Ошибка":
-        #                 print(txt)
-        #                 continue
-        #             check_accept()
-        #             answer_field.send_keys(txt)
-        #
-        #             print(f"Отзыв {i + 1} имеет следующий ответ:\n{txt}\n")
-        #
-        #             answer_button = driver.find_element(By.XPATH, f'//ul[@class="feedbackCardsList"]'
-        #                                                           f'/li[{i + 1}]//'
-        #                                                           f'span[text()="Ответить"]')
-        #             check_accept()
-        #             answer_button.click()
-        #             while answer_button.text != "Ответ отправлен":
-        #                 pass
-        #
-        #     if len(driver.find_elements(By.XPATH,
-        #                                 r'//button[contains(@class, "iconButton")]'
-        #                                 r'//*[contains(@class, "backwards")]')) == 1:
-        #         button = driver.find_element(By.XPATH,
-        #                                      '//button[contains(@class, "iconButton")]//*[contains(@class, "backwards")]')
-        #         button.click()
-        #         driver.execute_script('scroll(0, -800)')
-        #         time.sleep(3)
-        #         page += 1
-        #         print(f'Бот нажал стрелку {page} раз')
-        #     else:
-        #         break
-
         check = input("Введите что-либо для завершения\n>>>")
     except FileNotFoundError as ex:
         print("Вы указали данные пользователя, чьи данные для входа еще не были сохранены.")

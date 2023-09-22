@@ -16,10 +16,10 @@ XPathes = {
     "arrow_to_next_page": r'//button[contains(@class, "Pagination-icon-button")]//*[name()="path" and contains(@d, "M7.58586")]/../..',
     "star_list": r'//li[contains(@class, "Rating-stars-list")]',
     "active_star": r'//span[@style="width: 16px;"]',
-    "vendor_code": r'//span[text()="Артикул поставщика"]/../../span[contains(@class, "Text")]',
-    "circle_icons": r'//span[contains(@class, "CircleIcon")]/..',
+    "vendor_code": r'//span[text()="Артикул продавца"]/../../span[contains(@class, "Text")]',
+    "answer_and_go_to_inner": r'//span[contains(@class, "Text--inherit") and text()="Ответить"]',
     "text_area": r'//textarea',
-    "answer": r'//span[text()="Ответить"]'
+    "answer": r'//span[text()="Ответить" and contains(@class, "Button-link__text")]'
 }
 
 
@@ -74,12 +74,11 @@ class Controller:
         for i, review in enumerate(reviews):
             # Set review to the bottom of screen
             self.driver.execute_script("arguments[0].scrollIntoView(false);", review)
-
             # Unique XPathes for reviews
             review_xpath = f'{XPathes["reviews"]}[{i + 1}]'
             star_list_xpath = f'{review_xpath}{XPathes["star_list"]}{XPathes["active_star"]}'
             vendor_code_xpath = f'{review_xpath}{XPathes["vendor_code"]}'
-            circle_icons_xpath = f'{review_xpath}{XPathes["circle_icons"]}'
+            answer_to_inner_xpath = f'{review_xpath}{XPathes["answer_and_go_to_inner"]}'
             text_area_xpath = f'{review_xpath}{XPathes["text_area"]}'
             answer_xpath = f'{review_xpath}{XPathes["answer"]}'
             # Getting stars
@@ -88,8 +87,9 @@ class Controller:
             # Answer only for 5-star reviews
             if stars == 5:
                 vendor_code = self.driver.find_element(By.XPATH, vendor_code_xpath).text
+                print(vendor_code)
                 # Open answer window
-                self.driver.find_elements(By.XPATH, circle_icons_xpath)[0].click()
+                self.driver.find_elements(By.XPATH, answer_to_inner_xpath)[0].click()
                 text_area = self.driver.find_element(By.XPATH, text_area_xpath)
                 answer = create_template("Шаблон.xlsx", vendor_code)
 
