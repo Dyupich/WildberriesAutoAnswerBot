@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import pickle
-import time
 from Controller import Controller
 
 
@@ -48,8 +47,8 @@ if __name__ == '__main__':
     user_number = menu()
     try:
         controller = Controller()
-        controller.driver.get('https://seller.wildberries.ru/feedback-question/feedbacks/not-answered-feedbacks')
         # open url
+        controller.driver.get('https://seller.wildberries.ru/feedback-question/feedbacks/not-answered-feedbacks')
         # remove cookies
         controller.driver.delete_all_cookies()
         print("[INFO] Cookies deleted")
@@ -57,7 +56,7 @@ if __name__ == '__main__':
         for cookie in pickle.load(open(f"{user_number}_cookies", "rb")):
             # print(cookie)
             controller.driver.add_cookie(cookie)
-        print(f"[INFO] User {user_number} cookies loaded")
+        print(f"[INFO] cookies for +7{user_number} loaded")
         # restarting our page
         controller.driver.refresh()
         print("[INFO] Page is refreshed")
@@ -66,13 +65,15 @@ if __name__ == '__main__':
         print("[INFO] Controller.make_100_reviews_at_page method is done")
         # main loop
         controller.answer_on_reviews()
-        check = input("Введите что-либо для завершения\n>>>")
+        input("Введите что-либо для завершения\n>>>")
     except FileNotFoundError as ex:
         print("Вы указали данные пользователя, чьи данные для входа еще не были сохранены.")
     except Exception as ex:
-        print(ex)
-        time.sleep(10)
-        raise ex
+        with open("exception_log.log", "w") as f:
+            f.write(repr(ex))
+        print(repr(ex))
+        print("[ERROR] Check exception message here or in exception_log.log")
+        input("Введите что-либо для завершения\n>>>")
     finally:
         controller.driver.close()
         controller.driver.quit()
