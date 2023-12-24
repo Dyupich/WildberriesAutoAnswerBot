@@ -17,7 +17,7 @@ XPathes = {
     "star_list": r'//li[contains(@class, "Rating-stars-list")]',
     "active_star": r'//span[@style="width: 16px;"]',
     "vendor_code": r'//span[text()="Артикул продавца"]/../../span[contains(@class, "Text")]',
-    "answer_and_go_to_inner": r'//span[contains(@class, "Text--inherit") and text()="Ответить"]',
+    "answer_and_go_to_inner": r'//a[contains(@class, "Button-link--link-darkPurple")]',
     "text_area": r'//textarea',
     "answer": r'//span[text()="Ответить" and contains(@class, "Button-link__text")]',
     "notification": r'//div[contains(@class, "Notifications-modals-container")]'
@@ -100,6 +100,7 @@ class Controller:
             print(f"[INFO] Vendor code for this review: {vendor_code}")
             # Open answer window
             self.click_on_item_xpath(answer_to_inner_xpath)
+            print(text_area_xpath)
             text_area = self.driver.find_element(By.XPATH, text_area_xpath)
             print(f"[INFO] Text area for this review: {text_area}")
             answer = create_template("Шаблон.xlsx", vendor_code)
